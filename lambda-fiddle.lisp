@@ -16,6 +16,7 @@
    #:collect-for-keyword
    #:exclude-for-keyword
    #:flatten-lambda-list
+   #:flatten-method-lambda-list
    #:extract-lambda-vars
    #:remove-whole-part
    #:remove-environment-part
@@ -108,6 +109,14 @@ This also properly flattens inner lambda-lists of macro-lambda-lists."
                   (setf results (nconc (nreverse (flatten-lambda-list element)) results)))
                  (T (push element results)))
         finally (return (nreverse results))))
+
+(defun flatten-method-lambda-list (lambda-list)
+  "Flattens the lambda-list by replacing all lists within it with their respective first symbol.
+Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
+  (loop for item in lambda-list
+        collect (etypecase item
+                  (symbol item)
+                  (list (first item)))))
 
 (defun extract-lambda-vars (lambda-list)
   "Extracts the symbols that name the variables in the lambda-list."
