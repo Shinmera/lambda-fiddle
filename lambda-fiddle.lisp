@@ -35,7 +35,8 @@
    #:key-lambda-vars
    #:aux-lambda-vars
    #:split-lambda-list
-   #:with-destructured-lambda-list))
+   #:with-destructured-lambda-list
+   #:construct-lambda-list))
 (in-package #:lambda-fiddle)
 
 (defvar *lambda-keywords* '(&whole &environment &optional &rest &body &key &allow-other-keys &aux)
@@ -235,3 +236,20 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
                                 collect symb)))
        ,@forms)))
 
+(defun construct-lambda-list (&key whole environment required optional rest body key allow-other-keys aux)
+  "Construct a lambda-list out of the given parts."
+  (macrolet ((splice (arg)
+               (let ((symb (find-symbol (concatenate 'string "&" (symbol-name arg)))))
+                 `(etypecase ,arg
+                    (null NIL)
+                    (list (list* ',symb ,arg))
+                    (symbol (list ',symb ,arg))))))
+    (append (splice whole)
+            (splice environment)
+            (when required required)
+            (splice optional)
+            (splice rest)
+            (splice body)
+            (splice key)
+            (when allow-other-keys (list '&allow-other-keys))
+            (splice aux))))
