@@ -18,6 +18,7 @@
    #:flatten-lambda-list
    #:flatten-method-lambda-list
    #:extract-lambda-vars
+   #:extract-all-lambda-vars
    #:remove-whole-part
    #:remove-environment-part
    #:remove-required-part
@@ -122,6 +123,17 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
 (defun extract-lambda-vars (lambda-list)
   "Extracts the symbols that name the variables in the lambda-list."
   (delete-if #'lambda-keyword-p (flatten-lambda-list (remove-aux-part lambda-list))))
+
+(defun extract-all-lambda-vars (lambda-list)
+  "Extracts all variable bindings from the lambda-list, including the present-p ones."
+  (loop for item in lambda-list
+        unless (find item *lambda-keywords*)
+        nconc (cond ((and (listp item) (cddr item))
+                     (list (first item) (third item)))
+                    ((listp item)
+                     (list (first item)))
+                    (T
+                     (list item)))))
 
 (defun remove-whole-part (lambda-list)
   "Returns a fresh lambda-list without the &whole part."
