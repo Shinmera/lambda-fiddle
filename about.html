@@ -1,408 +1,83 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml">
-  <head>
-    <meta charset="utf-8"/>
-    <title>LAMBDA-FIDDLE</title>
-    <style type="text/css">
-      code a{text-decoration:none;}
-      h1{display:inline-block;font-size: 28pt;margin-bottom:0;}
-      code{font-family: Consolas, Inconsolata, monospace;}
-      h4{display: inline-block;margin:0;padding:0;}
-      #symbol-index ul{list-style: none;}
-      .package li{margin-bottom: 20px;}
-      .package pre{margin: 0 0 0 10px; white-space: pre-wrap;}
-      .package .nicknames{font-size: 12pt; font-weight: normal;}
-      table{margin: 20px;}
-      td{padding-bottom: 10px;}
-    </style>
-  </head>
-  <body>
-    <header>
-      <h1>lambda-fiddle</h1>
-      <span>1.0.0</span>
-      <p>A collection of functions to process lambda-lists.</p>
-    </header>
-    <div id="content">
-      <article>
-        <c:documentate>
-          <span><h2>About Lambda-Fiddle</h2>
+<!DOCTYPE html> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta charset="utf-8"/> <title>Lambda-Fiddle</title> <meta name="viewport" content="width=device-width"/> <meta name="description" content="A collection of functions to process lambda-lists."/> <meta name="author" content="Nicolas Hafner &lt;shinmera@tymoon.eu&gt;"/> <style type="text/css"> body{
+          max-width: 1024px;
+          margin: 0 auto 0 auto;
+          font-family: sans-serif;
+          color: #333333;
+          font-size: 14pt;
+          padding: 5px;
+      }
 
-<p>Lambda-fiddle is a collection of utilities to process lambda-lists. Mostly useful in contexts where you want a macro that uses lambda-lists in some fashion but need more precise processing.</p>
+      body>header{
+          display:flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          max-width: 100%;
+      }
 
-<h2>How To</h2>
+      img{
+          max-width: 100%;
+          max-height: 100%;
+      }
 
-<p>Included are --for each standard lambda-list part-- a <code>remove-*-part</code> and <code>*-lambda-var/s</code> function that remove the specified part or extract the associated variable/s, respectively. These are all based on the more generale <code><a href="#LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD">collect-for-keyword</a></code> and <code><a href="#LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD">exclude-for-keyword</a></code> functions that will scan the given lambda-list for the keyword and collect accordingly. The generalised functions may also be useful if you plan to include your own non-standard keywords.</p>
+      code{
+          font-family: Consolas, Inconsolata, monospace;
+      }
 
-<pre><code>(<a href="#LAMBDA-FIDDLE:REMOVE-AUX-PART">lambda-fiddle:remove-aux-part</a> '(foo bar &amp;key baz &amp;aux (something else) altogether))
+      a{
+          text-decoration: none;
+          color: #0055AA;
+      }
+
+      #documentation{
+          text-align: justify;
+      }
+
+      #documentation pre{
+          margin-left: 20px;
+      }
+
+      #symbol-index>ul{
+          list-style: none;
+          padding: 0;
+      }
+      #symbol-index .package>ul{
+          list-style: none;
+          padding: 0 0 0 10px;
+      }
+      #symbol-index .package .nicknames{
+          font-weight: normal;
+      }
+      #symbol-index .package h4{
+          display: inline-block;
+          margin: 0;
+      }
+      #symbol-index .package article{
+          margin: 0 0 15px 0;
+      }
+      #symbol-index .package article header{
+          font-size: 1.2em;
+          font-weight: normal;
+      }
+      #symbol-index .package .name{
+          margin-right: 5px;
+      }
+      #symbol-index .package .docstring{
+          margin: 0 0 0 15px;
+          white-space: pre-wrap;
+          font-size: 12pt;
+      }
+
+      @media (max-width: 800px){
+          body{font-size: 12pt;}
+      } </style> </head> <body> <header> <h1>lambda-fiddle</h1> <span class="version">1.0.0</span> <p class="description">A collection of functions to process lambda-lists.</p> </header> <main> <article id="documentation">  <div><h2>About Lambda-Fiddle</h2> <p>Lambda-fiddle is a collection of utilities to process lambda-lists. Mostly useful in contexts where you want a macro that uses lambda-lists in some fashion but need more precise processing.</p> <h2>How To</h2> <p>Included are --for each standard lambda-list part-- a <code>remove-*-part</code> and <code>*-lambda-var/s</code> function that remove the specified part or extract the associated variable/s, respectively. These are all based on the more generale <code><a href="#LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD">collect-for-keyword</a></code> and <code><a href="#LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD">exclude-for-keyword</a></code> functions that will scan the given lambda-list for the keyword and collect accordingly. The generalised functions may also be useful if you plan to include your own non-standard keywords.</p> <pre><code>(<a href="#LAMBDA-FIDDLE:REMOVE-AUX-PART">lambda-fiddle:remove-aux-part</a> '(foo bar &amp;key baz &amp;aux (something else) altogether))
 (<a href="#LAMBDA-FIDDLE:AUX-LAMBDA-VARS">lambda-fiddle:aux-lambda-vars</a> '(foo bar &amp;key baz &amp;aux (something else) altogether))
-</code></pre>
-
-<p>Additionally, there is <code><a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">split-lambda-list</a></code> and its macro partner <code><a href="#LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST">with-destructured-lambda-list</a></code> that split the lambda-list into all its parts and return/bind them accordingly, allowing for easy access.</p>
-
-<pre><code>(<a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">lambda-fiddle:split-lambda-list</a> '(&amp;whole wide world &amp;key roles))
+</code></pre> <p>Additionally, there is <code><a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">split-lambda-list</a></code> and its macro partner <code><a href="#LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST">with-destructured-lambda-list</a></code> that split the lambda-list into all its parts and return/bind them accordingly, allowing for easy access.</p> <pre><code>(<a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">lambda-fiddle:split-lambda-list</a> '(&amp;whole wide world &amp;key roles))
 (<a href="#LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST">lambda-fiddle:with-destructured-lambda-list</a> (:required req) '(foo bar &amp;optional baz)
   req)
-</code></pre>
-</span>
-        </c:documentate>
-      </article>
-      <article>
-        <h2>Copyright</h2>
-        <span>lambda-fiddle</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license and ©<span>2014</span> <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span>. This library can be obtained on <a href="https://github.com/Shinmera/lambda-fiddle">https://github.com/Shinmera/lambda-fiddle</a>.
-      </article>
-      <article id="symbol-index">
-        <h2>Package Index</h2>
-        <ul><li class="package">
-            <h3>
-              <a name="LAMBDA-FIDDLE" href="#LAMBDA-FIDDLE">LAMBDA-FIDDLE</a>
-              <span class="nicknames">(ORG.SHIRAKUMO.LAMBDA-FIDDLE)</span>
-            </h3>
-            <ul><li>
-                <a name="LAMBDA-FIDDLE:AUX-LAMBDA-VARS"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:AUX-LAMBDA-VARS">AUX-LAMBDA-VARS</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns all auxiliary variables of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:BODY-LAMBDA-VAR"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:BODY-LAMBDA-VAR">BODY-LAMBDA-VAR</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the body variable of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD">COLLECT-FOR-KEYWORD</a></h4>
-                      <span/>
-                      <span>(KEYWORD LAMBDA-LIST &amp;KEY (SPANNING T))</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh list of elements listed after the KEYWORD in the lambda-list.
-If SPANNING is T, it includes everything up until the next keyword, otherwise only one token each.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:ENVIRONMENT-LAMBDA-VAR"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:ENVIRONMENT-LAMBDA-VAR">ENVIRONMENT-LAMBDA-VAR</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the environment variable of the lambda-list</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD">EXCLUDE-FOR-KEYWORD</a></h4>
-                      <span/>
-                      <span>(KEYWORD LAMBDA-LIST &amp;KEY (SPANNING T))</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list but without the parts identified by KEYWORD.
-If SPANNING is T, it excludes everything up until the next keyword, otherwise only one token each.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:EXTRACT-LAMBDA-VARS"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:EXTRACT-LAMBDA-VARS">EXTRACT-LAMBDA-VARS</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Extracts the symbols that name the variables in the lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:FLATTEN-LAMBDA-LIST"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:FLATTEN-LAMBDA-LIST">FLATTEN-LAMBDA-LIST</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Flattens the lambda-list by replacing all lists within it with their respective first symbol.
-This also properly flattens inner lambda-lists of macro-lambda-lists.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:KEY-LAMBDA-VARS"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:KEY-LAMBDA-VARS">KEY-LAMBDA-VARS</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns all keyword variables of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:LAMBDA-KEYWORD-P"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:LAMBDA-KEYWORD-P">LAMBDA-KEYWORD-P</a></h4>
-                      <span/>
-                      <span>(SYMBOL)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the symbol if it is a lambda-keyword symbol (the &amp;-options).</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:OPTIONAL-LAMBDA-VARS"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:OPTIONAL-LAMBDA-VARS">OPTIONAL-LAMBDA-VARS</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns all optional variables of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-AUX-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-AUX-PART">REMOVE-AUX-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;aux part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-BODY-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-BODY-PART">REMOVE-BODY-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;body part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-ENVIRONMENT-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-ENVIRONMENT-PART">REMOVE-ENVIRONMENT-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;environment part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-KEY-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-KEY-PART">REMOVE-KEY-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;key part (also removing &amp;allow-other-keys if present).</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-OPTIONAL-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-OPTIONAL-PART">REMOVE-OPTIONAL-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;optional part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-REQUIRED-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-REQUIRED-PART">REMOVE-REQUIRED-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the required variables part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-REST-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-REST-PART">REMOVE-REST-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;rest part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REMOVE-WHOLE-PART"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REMOVE-WHOLE-PART">REMOVE-WHOLE-PART</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns a fresh lambda-list without the &amp;whole part.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REQUIRED-LAMBDA-VARS"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REQUIRED-LAMBDA-VARS">REQUIRED-LAMBDA-VARS</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns all required variables of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:REST-LAMBDA-VAR"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:REST-LAMBDA-VAR">REST-LAMBDA-VAR</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the rest variable of the ordinary-lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:SINGLE-ARGUMENT-KEYWORD-P"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:SINGLE-ARGUMENT-KEYWORD-P">SINGLE-ARGUMENT-KEYWORD-P</a></h4>
-                      <span/>
-                      <span>(SYMBOL)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the symbol if it is a single-argument-keyword symbol.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">SPLIT-LAMBDA-LIST</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Splits the lambda-list into its individual definition parts. Returns a list of values as follows:
- ((REQUIRED*) WHOLE ENVIRONMENT (OPTIONAL*) REST BODY (KEY*) (AUX*))</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:WHOLE-LAMBDA-VAR"/>
-                <article>
-                  <header>
-                    <span>FUNCTION</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:WHOLE-LAMBDA-VAR">WHOLE-LAMBDA-VAR</a></h4>
-                      <span/>
-                      <span>(LAMBDA-LIST)</span>
-                    </code>
-                  </header>
-                  <pre>Returns the &amp;whole variable of the lambda-list.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST"/>
-                <article>
-                  <header>
-                    <span>MACRO</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST">WITH-DESTRUCTURED-LAMBDA-LIST</a></h4>
-                      <span/>
-                      <span>((&amp;KEY WHOLE ENVIRONMENT REQUIRED OPTIONAL REST BODY KEY AUX) EXPRESSION &amp;BODY
- FORMS)</span>
-                    </code>
-                  </header>
-                  <pre>Destructures the given EXPRESSION into its lambda-list parts.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:*LAMBDA-KEYWORDS*"/>
-                <article>
-                  <header>
-                    <span>SPECIAL</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:*LAMBDA-KEYWORDS*">*LAMBDA-KEYWORDS*</a></h4>
-                      <span/>
-                      <span/>
-                    </code>
-                  </header>
-                  <pre>List of all standard lambda-keywords.</pre>
-                </article>
-              </li><li>
-                <a name="LAMBDA-FIDDLE:*SINGLE-ARGUMENT-KEYWORDS*"/>
-                <article>
-                  <header>
-                    <span>SPECIAL</span>
-                    <code>
-                      <h4><a href="#LAMBDA-FIDDLE:*SINGLE-ARGUMENT-KEYWORDS*">*SINGLE-ARGUMENT-KEYWORDS*</a></h4>
-                      <span/>
-                      <span/>
-                    </code>
-                  </header>
-                  <pre>List of all standard lambda-keywords that only allow one argument.</pre>
-                </article>
-              </li></ul>
-          </li></ul>
-      </article>
-    </div>
-  </body>
-</html>
+</code></pre> </div>  </article> <article id="copyright">  <h2>Copyright</h2> <span>lambda-fiddle</span> is licensed under the <span><a href="https://tldrlegal.com/search?q=Artistic">Artistic</a></span> license.  © <span>Nicolas Hafner &lt;shinmera@tymoon.eu&gt;</span> .  This library can be obtained on <a href="https://github.com/Shinmera/lambda-fiddle">https://github.com/Shinmera/lambda-fiddle</a>.  </article>  <article id="symbol-index"> <h2>Package Index</h2> <ul><li class="package"> <h3> <a name="LAMBDA-FIDDLE" href="#LAMBDA-FIDDLE">LAMBDA-FIDDLE</a> <span class="nicknames">(ORG.SHIRAKUMO.LAMBDA-FIDDLE)</span> </h3> <ul><li> <a name="LAMBDA-FIDDLE:*LAMBDA-KEYWORDS*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#LAMBDA-FIDDLE:*LAMBDA-KEYWORDS*">*LAMBDA-KEYWORDS*</a></code></h4>  </header> <pre class="docstring">List of all standard lambda-keywords.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:*SINGLE-ARGUMENT-KEYWORDS*"> </a> <article> <header class="special"> <span class="type">special</span>  <h4 class="name"><code><a href="#LAMBDA-FIDDLE:*SINGLE-ARGUMENT-KEYWORDS*">*SINGLE-ARGUMENT-KEYWORDS*</a></code></h4>  </header> <pre class="docstring">List of all standard lambda-keywords that only allow one argument.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:AUX-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:AUX-LAMBDA-VARS">AUX-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns all auxiliary variables of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:BODY-LAMBDA-VAR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:BODY-LAMBDA-VAR">BODY-LAMBDA-VAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns the body variable of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:COLLECT-FOR-KEYWORD">COLLECT-FOR-KEYWORD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">KEYWORD LAMBDA-LIST &amp;KEY (SPANNING T)</code><code>)</code>  </header> <pre class="docstring">Returns a fresh list of elements listed after the KEYWORD in the lambda-list.
+If SPANNING is T, it includes everything up until the next keyword, otherwise only one token each.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:CONSTRUCT-LAMBDA-LIST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:CONSTRUCT-LAMBDA-LIST">CONSTRUCT-LAMBDA-LIST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;KEY WHOLE ENVIRONMENT REQUIRED OPTIONAL REST BODY KEY ALLOW-OTHER-KEYS AUX</code><code>)</code>  </header> <pre class="docstring">Construct a lambda-list out of the given parts.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:ENVIRONMENT-LAMBDA-VAR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:ENVIRONMENT-LAMBDA-VAR">ENVIRONMENT-LAMBDA-VAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns the environment variable of the lambda-list</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:EXCLUDE-FOR-KEYWORD">EXCLUDE-FOR-KEYWORD</a></code></h4> <code class="qualifiers"></code> <code class="arguments">KEYWORD LAMBDA-LIST &amp;KEY (SPANNING T)</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list but without the parts identified by KEYWORD.
+If SPANNING is T, it excludes everything up until the next keyword, otherwise only one token each.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:EXTRACT-ALL-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:EXTRACT-ALL-LAMBDA-VARS">EXTRACT-ALL-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Extracts all variable bindings from the lambda-list, including the present-p ones.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:EXTRACT-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:EXTRACT-LAMBDA-VARS">EXTRACT-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Extracts the symbols that name the variables in the lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:FLATTEN-LAMBDA-LIST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:FLATTEN-LAMBDA-LIST">FLATTEN-LAMBDA-LIST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Flattens the lambda-list by replacing all lists within it with their respective first symbol.
+This also properly flattens inner lambda-lists of macro-lambda-lists.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:FLATTEN-METHOD-LAMBDA-LIST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:FLATTEN-METHOD-LAMBDA-LIST">FLATTEN-METHOD-LAMBDA-LIST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Flattens the lambda-list by replacing all lists within it with their respective first symbol.
+Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:KEY-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:KEY-LAMBDA-VARS">KEY-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns all keyword variables of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:LAMBDA-KEYWORD-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:LAMBDA-KEYWORD-P">LAMBDA-KEYWORD-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SYMBOL</code><code>)</code>  </header> <pre class="docstring">Returns the symbol if it is a lambda-keyword symbol (the &amp;-options).</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:OPTIONAL-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:OPTIONAL-LAMBDA-VARS">OPTIONAL-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns all optional variables of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-AUX-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-AUX-PART">REMOVE-AUX-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;aux part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-BODY-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-BODY-PART">REMOVE-BODY-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;body part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-ENVIRONMENT-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-ENVIRONMENT-PART">REMOVE-ENVIRONMENT-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;environment part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-KEY-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-KEY-PART">REMOVE-KEY-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;key part (also removing &amp;allow-other-keys if present).</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-OPTIONAL-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-OPTIONAL-PART">REMOVE-OPTIONAL-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;optional part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-REQUIRED-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-REQUIRED-PART">REMOVE-REQUIRED-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the required variables part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-REST-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-REST-PART">REMOVE-REST-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;rest part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REMOVE-WHOLE-PART"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REMOVE-WHOLE-PART">REMOVE-WHOLE-PART</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns a fresh lambda-list without the &amp;whole part.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REQUIRED-LAMBDA-VARS"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REQUIRED-LAMBDA-VARS">REQUIRED-LAMBDA-VARS</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns all required variables of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:REST-LAMBDA-VAR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:REST-LAMBDA-VAR">REST-LAMBDA-VAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns the rest variable of the ordinary-lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:SINGLE-ARGUMENT-KEYWORD-P"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:SINGLE-ARGUMENT-KEYWORD-P">SINGLE-ARGUMENT-KEYWORD-P</a></code></h4> <code class="qualifiers"></code> <code class="arguments">SYMBOL</code><code>)</code>  </header> <pre class="docstring">Returns the symbol if it is a single-argument-keyword symbol.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:SPLIT-LAMBDA-LIST">SPLIT-LAMBDA-LIST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Splits the lambda-list into its individual definition parts. Returns a list of values as follows:
+ ((REQUIRED*) WHOLE ENVIRONMENT (OPTIONAL*) REST BODY (KEY*) (AUX*))</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:WHOLE-LAMBDA-VAR"> </a> <article> <header class="function"> <span class="type">function</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:WHOLE-LAMBDA-VAR">WHOLE-LAMBDA-VAR</a></code></h4> <code class="qualifiers"></code> <code class="arguments">LAMBDA-LIST</code><code>)</code>  </header> <pre class="docstring">Returns the &amp;whole variable of the lambda-list.</pre> </article> </li><li> <a name="LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST"> </a> <article> <header class="macro"> <span class="type">macro</span>  <code>(</code><h4 class="name"><code><a href="#LAMBDA-FIDDLE:WITH-DESTRUCTURED-LAMBDA-LIST">WITH-DESTRUCTURED-LAMBDA-LIST</a></code></h4> <code class="qualifiers"></code> <code class="arguments">&amp;REST ARGS</code><code>)</code>  </header> <pre class="docstring">Destructures the given EXPRESSION into its lambda-list parts.</pre> </article> </li></ul> </li></ul> </article>  </main> </body> </html> 
