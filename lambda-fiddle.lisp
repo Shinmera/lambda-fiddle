@@ -231,16 +231,15 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
                                                 (car vars)
                                                 (nreverse vars)))))))
 
-(defmacro with-destructured-lambda-list ((&key whole environment required optional rest body key aux) expression &body forms)
+(defmacro with-destructured-lambda-list ((&rest parts &key whole environment required optional rest body key aux &allow-other-keys) expression &body forms)
   "Destructures the given EXPRESSION into its lambda-list parts."
-  (let ((bindings (list (or required (gensym "REQUIRED"))
-                        (or whole (gensym "WHOLE"))
-                        (or environment (gensym "ENVIRONMENT"))
-                        (or optional (gensym "OPTIONAL"))
-                        (or rest (gensym "REST"))
-                        (or body (gensym "BODY"))
-                        (or key (gensym "KEY"))
-                        (or aux (gensym "AUX")))))
+  (declare (ignore whole environment optional rest body key aux))
+  (let ((bindings (list* (or required (gensym "REQUIRED"))
+                         (loop for keyword in *lambda-keywords*
+                               unless (eq keyword '&allow-other-keys)
+                               collect (or (loop for (key val) on parts by #'cddr
+                                                 do (when (string= key keyword :start2 1) (return val)))
+                                           (gensym (subseq (string keyword) 1)))))))
     `(destructuring-bind ,bindings
          (split-lambda-list ,expression)
        (declare (ignore ,@(loop for symb in bindings
