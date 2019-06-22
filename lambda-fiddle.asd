@@ -7,7 +7,7 @@
 (asdf:defsystem lambda-fiddle
   :name "lambda-fiddle"
   :version "1.0.0"
-  :license "Artistic"
+  :license "zlib"
   :author "Nicolas Hafner <shinmera@tymoon.eu>"
   :maintainer "Nicolas Hafner <shinmera@tymoon.eu>"
   :description "A collection of functions to process lambda-lists."
