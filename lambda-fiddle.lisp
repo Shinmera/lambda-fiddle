@@ -64,7 +64,8 @@ If SPANNING is T, it includes everything up until the next keyword, otherwise on
                  ((and in-keyword (lambda-keyword-p i))
                   (setf in-keyword NIL))
                  (in-keyword
-                  (push i list)
+                  (push (if (consp i) (second i) i)
+                        list)
                   (unless spanning
                     (setf in-keyword NIL))))
         finally (return (nreverse list))))
@@ -122,16 +123,25 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
 
 (defun extract-lambda-vars (lambda-list)
   "Extracts the symbols that name the variables in the lambda-list."
-  (delete-if #'lambda-keyword-p (flatten-lambda-list (remove-aux-part lambda-list))))
+  (loop for item in (flatten-lambda-list (remove-aux-part lambda-list))
+        unless (lambda-keyword-p item)
+        collect (etypecase item
+                  (symbol item)
+                  (cons (second item)))))
 
 (defun extract-all-lambda-vars (lambda-list)
   "Extracts all variable bindings from the lambda-list, including the present-p ones."
   (loop for item in lambda-list
-        unless (find item *lambda-keywords*)
+        unless (lambda-keyword-p item)
         nconc (cond ((and (listp item) (cddr item))
-                     (list (first item) (third item)))
+                     (list (if (consp (first item))
+                               (second (first item))
+                               (first item))
+                           (third item)))
                     ((listp item)
-                     (list (first item)))
+                     (list (if (consp (first item))
+                               (second (first item))
+                               (first item))))
                     (T
                      (list item)))))
 
