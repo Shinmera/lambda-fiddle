@@ -45,6 +45,9 @@
 (defvar *single-argument-keywords* '(&whole &environment &rest &body)
   "List of all standard lambda-keywords that only allow one argument.")
 
+(defun unlist (thing &optional (n 0))
+  (if (consp thing) (nth n thing) thing))
+
 (defun lambda-keyword-p (symbol)
   "Returns the symbol if it is a lambda-keyword symbol (the &-options)."
   (find symbol *lambda-keywords*))
@@ -104,7 +107,7 @@ This also properly flattens inner lambda-lists of macro-lambda-lists."
                   (push (setf in-opt element)
                         results))
                  (in-opt
-                  (push (if (listp element) (car element) element)
+                  (push (unlist element)
                         results))
                  ;; Flatten inner lists recursively
                  ((listp element)
@@ -122,16 +125,18 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
 
 (defun extract-lambda-vars (lambda-list)
   "Extracts the symbols that name the variables in the lambda-list."
-  (delete-if #'lambda-keyword-p (flatten-lambda-list (remove-aux-part lambda-list))))
+  (loop for part in (flatten-lambda-list (remove-aux-part lambda-list))
+        unless (lambda-keyword-p part)
+        collect (unlist part 1)))
 
 (defun extract-all-lambda-vars (lambda-list)
   "Extracts all variable bindings from the lambda-list, including the present-p ones."
   (loop for item in lambda-list
         unless (find item *lambda-keywords*)
         nconc (cond ((and (listp item) (cddr item))
-                     (list (first item) (third item)))
+                     (list (unlist (first item) 1) (third item)))
                     ((listp item)
-                     (list (first item)))
+                     (list (unlist (first item) 1)))
                     (T
                      (list item)))))
 
@@ -204,7 +209,8 @@ Unlike FLATTEN-LAMBDA-LIST, this works for method lambda lists."
 
 (defun key-lambda-vars (lambda-list)
   "Returns all keyword variables of the ordinary-lambda-list."
-  (flatten! (collect-for-keyword '&key lambda-list)))
+  (loop for binding in (flatten! (collect-for-keyword '&key lambda-list))
+        collect (unlist binding 1)))
 
 (defun aux-lambda-vars (lambda-list)
   "Returns all auxiliary variables of the ordinary-lambda-list."
