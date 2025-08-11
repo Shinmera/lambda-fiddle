@@ -5,9 +5,9 @@
   :author "Yukari Hafner <shinmera@tymoon.eu>"
   :maintainer "Yukari Hafner <shinmera@tymoon.eu>"
   :description "A collection of functions to process lambda-lists."
-  :homepage "https://Shinmera.github.io/lambda-fiddle/"
-  :bug-tracker "https://github.com/Shinmera/lambda-fiddle/issues"
-  :source-control (:git "https://github.com/Shinmera/lambda-fiddle.git")
+  :homepage "https://shinmera.com/docs/lambda-fiddle/"
+  :bug-tracker "https://shinmera.com/project/lambda-fiddle/issues"
+  :source-control (:git "https://shinmera.com/project/lambda-fiddle.git")
   :serial T
   :components ((:file "lambda-fiddle"))
   :depends-on ())
